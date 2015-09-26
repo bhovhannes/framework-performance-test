@@ -1,7 +1,7 @@
-<button ng-click="render()">Render</button>
-<button ng-click="partialRender()" ng-if="getCells().length>0">Render 10 random cells</button>
-<button ng-click="partialRenderInFirstRows()" ng-if="getCells().length>0">Render 10 random cells in top 5 rows</button>
-<button ng-click="partialRenderInLastRows()" ng-if="getCells().length>0">Render 10 random cells in bottom 5 rows</button>
+<button ng-click="handleRenderClick()">Render</button>
+<button ng-click="handlePartialRenderClick()" ng-if="getCells().length>0">Render 10 random cells</button>
+<button ng-click="handlePartialRenderInFirstRowsClick()" ng-if="getCells().length>0">Render 10 random cells in top 5 rows</button>
+<button ng-click="handlePartialRenderInLastRowsClick()" ng-if="getCells().length>0">Render 10 random cells in bottom 5 rows</button>
 <div class="table">
 	<div ng-repeat="row in getCells() track by $index" class="row">
 		<div ng-repeat="cell in row track by $index" class="cell" ng-style="getCellStyle(cell)">{{cell.index}}</div>

@@ -1,7 +1,8 @@
 'use strict';
-var path = require('path');
+var path = require('path'),
+	nodeModulesDir = __dirname + '/node_modules';
 
-module.exports = {
+var webpackConfig = {
 	context: __dirname,
 	entry: {
 		'common': './src/common/index.js',
@@ -14,8 +15,12 @@ module.exports = {
 		path: path.join(__dirname, 'dist'),
 		filename: '[name].js'
 	},
+	resolve: {
+		alias: {}
+	},
 	devtool: 'source-map',
 	module: {
+		noParse: [],
 		loaders: [
 			{test: /\.html$/, loader: 'raw'},
 			{
@@ -37,10 +42,22 @@ module.exports = {
 				loader: 'babel-loader'
 			}
 		]
-	},
-	externals: [
-		//'angular'
-	],
-	plugins: [
-	]
+	}
 };
+
+var aliases = webpackConfig.resolve.alias;
+if (process.env.NODE_ENV === 'production') {
+	aliases['mustache'] = path.join(nodeModulesDir, 'mustache', 'mustache.min.js');
+	webpackConfig.module.noParse.push(aliases['mustache']);
+	aliases['react'] = path.join(nodeModulesDir, 'react', 'dist', 'react.min.js');
+	webpackConfig.module.noParse.push(aliases['react']);
+	aliases['angular'] = path.join(nodeModulesDir, 'angular', 'angular.min.js');
+	webpackConfig.module.noParse.push(aliases['angular']);
+}
+else {
+	aliases['mustache'] = path.join(nodeModulesDir, 'mustache', 'mustache.js');
+	aliases['react'] = path.join(nodeModulesDir, 'react', 'react.js');
+	aliases['angular'] = path.join(nodeModulesDir, 'angular', 'angular.js');
+}
+
+module.exports = webpackConfig;

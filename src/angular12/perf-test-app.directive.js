@@ -61,49 +61,49 @@ var directive = [function () {
 			};
 
 			var doRender = function(msg, durationsVec) {
-				var timer = Timer.start('Digest (partial first) started');
+				var timer = Timer.start(msg);
 				scope.$digest();
 				durationsVec.push(timer.stop());
 				updateStats();
 			};
 
-			scope.partialRenderInFirstRows = function() {
+			scope.handlePartialRenderInFirstRowsClick = function() {
 				window.setTimeout(function() {
 					for(var i=0; i<10; ++i) {
 						var randomRow = Math.floor(Math.random()*5);
 						var randomCol = Math.floor(Math.random()*dataSize.cols);
 						cells[randomRow][randomCol].color = getRandomColor();
 					}
-					doRender('Digest (partial first) started', partialRenderDurations);
+					doRender('Digest (partial first)', partialRenderDurations);
 				}, 0);
 			};
 
-			scope.partialRenderInLastRows = function() {
+			scope.handlePartialRenderInLastRowsClick = function() {
 				window.setTimeout(function() {
 					for(var i=0; i<10; ++i) {
 						var randomRow = (dataSize.rows - 5) + Math.floor(Math.random()*5);
 						var randomCol = Math.floor(Math.random()*dataSize.cols);
 						cells[randomRow][randomCol].color = getRandomColor();
 					}
-					doRender('Digest (partial last) started', partialRenderDurations);
+					doRender('Digest (partial last)', partialRenderDurations);
 				}, 0);
 			};
 
-			scope.partialRender = function() {
+			scope.handlePartialRenderClick = function() {
 				window.setTimeout(function() {
 					for(var i=0; i<10; ++i) {
 						var randomRow = Math.floor(Math.random()*dataSize.rows);
 						var randomCol = Math.floor(Math.random()*dataSize.cols);
 						cells[randomRow][randomCol].color = getRandomColor();
 					}
-					doRender('Digest (partial) started', partialRenderDurations);
+					doRender('Digest (partial)', partialRenderDurations);
 				}, 0);
 			};
 
-			scope.render = function() {
+			scope.handleRenderClick = function() {
 				window.setTimeout(function() {
 					cells = generateData(dataSize.rows, dataSize.cols);
-					doRender('Digest started', renderDurations);
+					doRender('Digest', renderDurations);
 				}, 0);
 			};
 		}
