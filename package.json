@@ -25,7 +25,8 @@
     "predeploy": "npm install && bower install",
     "prewatchdeploy": "npm install && bower install",
     "deploy": "NODE_ENV=production webpack -p",
-    "watch-deploy": "NODE_ENV=production webpack -pw"
+    "watch-deploy": "NODE_ENV=production webpack -pw",
+    "sync-ghpages": "git checkout gh-pages;git rebase master;git push origin gh-pages;git checkout master"
   },
   "repository": {
     "type": "git",
