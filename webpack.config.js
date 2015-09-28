@@ -1,14 +1,16 @@
 'use strict';
 var path = require('path'),
-	nodeModulesDir = __dirname + '/node_modules';
+	nodeModulesDir = __dirname + '/node_modules',
+	bowerComponentsDir = __dirname + '/bower_components';
 
 var webpackConfig = {
 	context: __dirname,
 	entry: {
 		'common': './src/common/index.js',
 		'angular12': './src/angular12/index.js',
-		'angular12-react': './src/angular12-react/index.js',
-		'react': './src/react/index.js'
+		'angular13': './src/angular13/index.js',
+		'angular14': './src/angular14/index.js',
+		'react13': './src/react13/index.js'
 	},
 	output: {
 		libraryTarget: 'umd',
@@ -38,7 +40,7 @@ var webpackConfig = {
 			},
 			{
 				test: /\.js?$/,
-				exclude: /(node_modules)/,
+				exclude: /(node_modules|bower_components)/,
 				loader: 'babel-loader'
 			}
 		]
@@ -48,16 +50,21 @@ var webpackConfig = {
 var aliases = webpackConfig.resolve.alias;
 if (process.env.NODE_ENV === 'production') {
 	aliases['mustache'] = path.join(nodeModulesDir, 'mustache', 'mustache.min.js');
-	webpackConfig.module.noParse.push(aliases['mustache']);
-	aliases['react'] = path.join(nodeModulesDir, 'react', 'dist', 'react.min.js');
-	webpackConfig.module.noParse.push(aliases['react']);
-	aliases['angular'] = path.join(nodeModulesDir, 'angular', 'angular.min.js');
-	webpackConfig.module.noParse.push(aliases['angular']);
+	aliases['react13'] = path.join(bowerComponentsDir, 'react13', 'react.min.js');
+	aliases['angular12'] = path.join(bowerComponentsDir, 'angular12', 'angular.min.js');
+	aliases['angular13'] = path.join(bowerComponentsDir, 'angular13', 'angular.min.js');
+	aliases['angular14'] = path.join(bowerComponentsDir, 'angular14', 'angular.min.js');
 }
 else {
 	aliases['mustache'] = path.join(nodeModulesDir, 'mustache', 'mustache.js');
-	aliases['react'] = path.join(nodeModulesDir, 'react', 'react.js');
-	aliases['angular'] = path.join(nodeModulesDir, 'angular', 'angular.js');
+	aliases['react13'] = path.join(bowerComponentsDir, 'react13', 'react.js');
+	aliases['angular12'] = path.join(bowerComponentsDir, 'angular12', 'angular.js');
+	aliases['angular13'] = path.join(bowerComponentsDir, 'angular13', 'angular.js');
+	aliases['angular14'] = path.join(bowerComponentsDir, 'angular14', 'angular.js');
+}
+
+for(var alias in aliases) {
+	webpackConfig.module.noParse.push(aliases[alias]);
 }
 
 module.exports = webpackConfig;

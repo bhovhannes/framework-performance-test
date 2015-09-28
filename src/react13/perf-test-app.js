@@ -1,5 +1,5 @@
 /*** @jsx React.DOM */
-var React = require('react');
+var React = require('react13');
 
 var dataSize = require('../common/dataSize');
 var generateData = require('../common/generateData');
@@ -8,12 +8,7 @@ var updateStatsHood = require('../common/updateStatsHood');
 var Timer = require('../common/timer');
 var hoodTemplate = require('./hood.mustache.html');
 var PerfTestCell = require('./perf-test-cell');
-/*
-function getCellStyle(cell) {
-	return {
-		backgroundColor: 'rgb('+cell.color.r+', '+cell.color.g+', '+cell.color.b+')'
-	};
-}*/
+
 
 var PerfTestApp = React.createClass({
 	getInitialState: function() {
@@ -58,69 +53,29 @@ var PerfTestApp = React.createClass({
 		});
 	},
 
-	handlePartialRenderInFirstRowsClick: function() {
-		var timer = Timer.start('Render (partial first)');
-		this.setState(
-			function(previousState) {
-				for(var i=0; i<10; ++i) {
-					var randomRow = Math.floor(Math.random()*5);
-					var randomCol = Math.floor(Math.random()*dataSize.cols);
-					var cell = previousState.cells[randomRow][randomCol];
-					previousState.cells[randomRow][randomCol] = {
-						index: cell.index,
-						color: getRandomColor()
-					};
-				}
-				return {
-					cells: previousState.cells
-				};
-			},
-			function() {
-				this.partialRenderDurations.push(timer.stop());
-				this.updateStats();
-			}.bind(this)
-		);
-	},
-
-	handlePartialRenderInLastRowsClick: function() {
-		var timer = Timer.start('Render (partial last)');
-		this.setState(
-			function(previousState) {
-				for(var i=0; i<10; ++i) {
-					var randomRow = (dataSize.rows - 5) + Math.floor(Math.random()*5);
-					var randomCol = Math.floor(Math.random()*dataSize.cols);
-					var cell = previousState.cells[randomRow][randomCol];
-					previousState.cells[randomRow][randomCol] = {
-						index: cell.index,
-						color: getRandomColor()
-					};
-				}
-				return {
-					cells: previousState.cells
-				};
-			},
-			function() {
-				this.partialRenderDurations.push(timer.stop());
-				this.updateStats();
-			}.bind(this)
-		);
-	},
-
 	handlePartialRenderClick: function() {
 		var timer = Timer.start('Render (partial)');
 		this.setState(
 			function(previousState) {
-				for(var i=0; i<10; ++i) {
+				var cells = new Array(dataSize.rows),
+					i, j;
+				for (i=0; i<dataSize.rows; ++i) {
+					cells[i] = new Array(dataSize.cols);
+					for (j=0; j<dataSize.cols; ++j) {
+						cells[i][j] = previousState.cells[i][j];
+					}
+				}
+
+				for(i=0; i<dataSize.partialCellsCount; ++i) {
 					var randomRow = Math.floor(Math.random()*dataSize.rows);
 					var randomCol = Math.floor(Math.random()*dataSize.cols);
-					var cell = previousState.cells[randomRow][randomCol];
-					previousState.cells[randomRow][randomCol] = {
-						index: cell.index,
+					cells[randomRow][randomCol] = {
+						index: cells[randomRow][randomCol].index,
 						color: getRandomColor()
 					};
 				}
 				return {
-					cells: previousState.cells
+					cells: cells
 				};
 			},
 			function() {
@@ -144,17 +99,19 @@ var PerfTestApp = React.createClass({
 		);
 	},
 
+	shouldComponentUpdate: function(nextProps, nextState) {
+		return this.state.cells !== nextState.cells;
+	},
+
 	render: function() {
 		return (
 			<div>
-				<button onClick={this.handleRenderClick}>Render</button>
+				<button onClick={this.handleRenderClick}>Render</button>{' '}
 				{function() {
 					if (this.state.cells.length > 0) {
-						return [
-							<button onClick={this.handlePartialRenderClick}>Render 10 random cells</button>,
-							<button onClick={this.handlePartialRenderInFirstRowsClick}>Render 10 random cells in top 5 rows</button>,
-							<button onClick={this.handlePartialRenderInLastRowsClick}>Render 10 random cells in bottom 5 rows</button>
-						];
+						return (
+							<button onClick={this.handlePartialRenderClick}>Render {dataSize.partialCellsCount} random cells</button>
+						);
 					}
 				}.call(this)}
 				<div className="table">
@@ -178,6 +135,5 @@ var PerfTestApp = React.createClass({
 		);
 	}
 });
-//<div className="cell" key={colIndex} style={getCellStyle(cell)}>{cell.index}</div>
 
 module.exports = PerfTestApp;
