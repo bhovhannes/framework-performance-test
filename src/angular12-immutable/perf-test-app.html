@@ -2,6 +2,6 @@
 <button ng-click="handlePartialRenderClick()" ng-if="immutableCells.size>0">Render {{partialCellsCount}} random cells</button>
 <div class="table">
 	<div immutable="immutableCells" ng-repeat="row in immutableCells track by $index" class="row">
-		<div immutable="immutableCells.get($index)" ng-repeat="cell in row track by $index" class="cell" ng-style="getCellStyle(cell)">{{cell.index}}</div>
+		<div ng-repeat="cell in row track by $index" class="cell" ng-style="getCellStyle(cell)">{{cell.index}}</div>
 	</div>
 </div>

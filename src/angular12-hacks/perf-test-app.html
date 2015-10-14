@@ -1,0 +1,7 @@
+<button ng-click="handleRenderClick()">Render</button>
+<button ng-click="handlePartialRenderClick()" ng-if="__fastWatched__getCells().length>0">Render {{partialCellsCount}} random cells</button>
+<div class="table">
+	<div ng-repeat="row in __fastWatched__getCells() track by $index" class="row">
+		<div ng-repeat="cell in row track by $index" class="cell" ng-style="getCellStyle(cell)">{{cell.index}}</div>
+	</div>
+</div>

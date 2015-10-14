@@ -1,5 +1,4 @@
 var template = require('./perf-test-app.html');
-var Immutable = require('immutable');
 
 var dataSize = require('../common/dataSize');
 var generateData = require('../common/generateData');
@@ -16,10 +15,17 @@ var directive = [function () {
 		template: template,
 		link: function(scope) {
 
-			var renderDurations = [],
+			var cells = [],
+				renderDurations = [],
 				partialRenderDurations = [];
 
-			scope.immutableCells = Immutable.List();
+			scope.__fastWatched__getCells = function() {
+				return cells;
+			};
+
+			scope.__fastWatched__getRowCells = function(row) {
+				return row;
+			};
 
 			scope.partialCellsCount = dataSize.partialCellsCount;
 
@@ -50,7 +56,7 @@ var directive = [function () {
 			var updateStats = function() {
 				updateStatsHood(hoodTemplate, {
 					renderCount: renderDurations.length,
-					totalCellCount: scope.immutableCells.size * scope.immutableCells.get(0).size,
+					totalCellCount: cells.length * cells[0].length,
 					firstRenderDuration: renderDurations[0].toFixed(3)+'ms',
 					lastRenderDuration: renderDurations[renderDurations.length-1].toFixed(3)+'ms',
 					averageRenderDuration: getAverageRenderDuration(),
@@ -65,7 +71,7 @@ var directive = [function () {
 					for(var i=0; i<dataSize.partialCellsCount; ++i) {
 						var randomRow = Math.floor(Math.random()*dataSize.rows);
 						var randomCol = Math.floor(Math.random()*dataSize.cols);
-						scope.immutableCells.get(randomRow).get(randomCol).color = getRandomColor();
+						cells[randomRow][randomCol].color = getRandomColor();
 					}
 					var timer = Timer.start('Digest (partial)');
 					scope.$digest();
@@ -76,11 +82,7 @@ var directive = [function () {
 
 			scope.handleRenderClick = function() {
 				window.setTimeout(function() {
-					scope.immutableCells = scope.immutableCells.clear();
-					var newCells = generateData(dataSize.rows, dataSize.cols);
-					for (var i=0; i<newCells.length; ++i) {
-						scope.immutableCells = scope.immutableCells.set(i, Immutable.List(newCells[i]));
-					}
+					cells = generateData(dataSize.rows, dataSize.cols);
 					var timer = Timer.start('Digest');
 					scope.$digest();
 					renderDurations.push(timer.stop());
@@ -91,6 +93,30 @@ var directive = [function () {
 	};
 }];
 
+
+var decorateRootScope = function($delegate) {
+	var rootScopeProto = Object.getPrototypeOf($delegate);
+
+	//preserve original methods
+	var originalMethods = {
+		'$watchCollection': rootScopeProto.$watchCollection
+	};
+
+	rootScopeProto.$watchCollection = function(watchExpr, watchAction) {
+		if (watchExpr.indexOf('__fastWatched__') > 0) {
+			rootScopeProto.$watch.call(this, [watchExpr, watchAction]);
+		}
+		else {
+			originalMethods.$watchCollection.apply(this, arguments);
+		}
+	};
+	return $delegate;
+};
+
+
 module.exports = function(_module) {
+	_module.config(['$provide', function($provide) {
+		$provide.decorator('$rootScope', ['$delegate', decorateRootScope]);
+	}]);
 	_module.directive('perfTestApp', directive);
 };

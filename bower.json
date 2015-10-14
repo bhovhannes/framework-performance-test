@@ -23,7 +23,6 @@
     "angular12": "angular#1.2.28",
     "react13": "react#0.13.3",
     "angular-immutable": "~0.1.0",
-    "immutable": "~3.7.5",
-    "immutable-angular": "~1.1.0"
+    "immutable": "~3.7.5"
   }
 }

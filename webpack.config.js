@@ -9,6 +9,7 @@ var webpackConfig = {
 		'common': './src/common/index.js',
 		'angular12': './src/angular12/index.js',
 		'angular12-immutable': './src/angular12-immutable/index.js',
+		'angular12-hacks': './src/angular12-hacks/index.js',
 		'angular13': './src/angular13/index.js',
 		'angular14': './src/angular14/index.js',
 		'react13': './src/react13/index.js'
@@ -20,7 +21,6 @@ var webpackConfig = {
 	},
 	resolve: {
 		alias: {
-			'immutable-angular': path.join(bowerComponentsDir, 'immutable-angular', 'immutable.js')
 		}
 	},
 	devtool: 'source-map',
