@@ -5,7 +5,6 @@ var generateData = require('../common/generateData');
 var getRandomColor = require('../common/getRandomColor');
 var updateStatsHood = require('../common/updateStatsHood');
 var Timer = require('../common/timer');
-var hoodTemplate = require('./hood.mustache.html');
 
 var directive = [function () {
 	return {
@@ -54,7 +53,7 @@ var directive = [function () {
 			};
 
 			var updateStats = function() {
-				updateStatsHood(hoodTemplate, {
+				updateStatsHood({
 					renderCount: renderDurations.length,
 					totalCellCount: cells.length * cells[0].length,
 					firstRenderDuration: renderDurations[0].toFixed(3)+'ms',

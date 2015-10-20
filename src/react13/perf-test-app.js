@@ -6,7 +6,6 @@ var generateData = require('../common/generateData');
 var getRandomColor = require('../common/getRandomColor');
 var updateStatsHood = require('../common/updateStatsHood');
 var Timer = require('../common/timer');
-var hoodTemplate = require('./hood.mustache.html');
 var PerfTestCell = require('./perf-test-cell');
 
 
@@ -41,7 +40,7 @@ var PerfTestApp = React.createClass({
 	},
 
 	updateStats: function() {
-		updateStatsHood(hoodTemplate, {
+		updateStatsHood({
 			renderCount: this.renderDurations.length,
 			totalCellCount: this.state.cells.length * this.state.cells[0].length,
 			firstRenderDuration: this.renderDurations[0].toFixed(3)+'ms',

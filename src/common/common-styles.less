@@ -14,34 +14,16 @@
 body, html {
 	margin: 0;
 	padding: 0;
+	height: 100%;
 }
 body {
 	background: @textPrimaryColor;
 	color: @primaryTextColor;
 	font-size: 14px;
-}
 
-.nav {
-	background: @primaryColor;
-	color: @textPrimaryColor;
-	padding: 10px 20px 10px 30px;
-	position: relative;
-	box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-	.nav-link {
-		position: relative;
-		float:right;
-		margin: 9px 6px;
-		display: inline-block;
-		text-decoration: none;
-		padding: 8px 13px;
-		border-radius: 4px;
-		background: @accentColor;
-		color: @primaryTextColor;
-		box-shadow: 0 1px 1px rgba(0,0,0,0.23),0 3px 10px rgba(0,0,0,0.16);
-		&:hover, &.nav-link-active {
-			text-decoration: underline;
-		}
-	}
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 .text-primary {
@@ -57,8 +39,8 @@ body {
 	display: none;
 	position: absolute;
 	width: @stats-panel-width;
-	right: 30px;
-	top: 70px;
+	right: 10px;
+	top: 10px;
 	padding: 20px;
 	border-radius: 6px;
 	margin-left: -(@stats-panel-width/2);
@@ -81,8 +63,6 @@ body {
 }
 
 #content {
-	position: relative;
-	top: 20px;
 	padding: 20px;
 
 	.table {

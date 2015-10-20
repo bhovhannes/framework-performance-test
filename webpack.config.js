@@ -6,7 +6,8 @@ var path = require('path'),
 var webpackConfig = {
 	context: __dirname,
 	entry: {
-		'common': './src/common/index.js',
+		'index': './src/common/index.js',
+		'common': './src/common/common.js',
 		'angular12': './src/angular12/index.js',
 		'angular12-immutable': './src/angular12-immutable/index.js',
 		'angular12-hacks': './src/angular12-hacks/index.js',
